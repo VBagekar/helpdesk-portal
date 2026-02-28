@@ -1,5 +1,5 @@
 package com.vaishnavi.helpdesk.entity;
-
+import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,7 +9,7 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private LocalDateTime createdAt;
     private String title;
 
     private String description;
@@ -35,7 +35,8 @@ public class Ticket {
 
     public String getPriority() { return priority; }
     public void setPriority(String priority) { this.priority = priority; }
-
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public String getCreatedBy() { return createdBy; }
     public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
 }

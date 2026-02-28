@@ -8,6 +8,7 @@ import com.vaishnavi.helpdesk.dto.TicketResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 @Service
 public class TicketService {
@@ -75,6 +76,7 @@ public class TicketService {
                 .getPrincipal();
 
         ticket.setCreatedBy(email);
+        ticket.setCreatedAt(LocalDateTime.now());
         ticket.setStatus("OPEN");
 
         return ticketRepository.save(ticket);
