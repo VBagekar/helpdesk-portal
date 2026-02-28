@@ -18,8 +18,19 @@ public class TicketService {
         Ticket ticket = ticketRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ticket not found"));
 
-        ticket.setStatus(status);
+        String role = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getAuthorities()
+                .iterator()
+                .next()
+                .getAuthority();
 
+        // Only ADMIN can close
+        if (status.equals("CLOSED") && !role.equals("ROLE_ADMIN")) {
+            throw new RuntimeException("Only ADMIN can close tickets");
+        }
+
+        ticket.setStatus(status);
         return ticketRepository.save(ticket);
     }
     public Ticket createTicket(Ticket ticket) {

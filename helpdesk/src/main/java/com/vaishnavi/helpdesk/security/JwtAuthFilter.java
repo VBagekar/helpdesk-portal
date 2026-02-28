@@ -1,5 +1,6 @@
 package com.vaishnavi.helpdesk.security;
-
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import java.util.List;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,11 +39,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
 
         String email = jwtService.extractEmail(token);
-
+        String role = jwtService.extractRole(token);
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(email, null, Collections.emptyList());
+                    new UsernamePasswordAuthenticationToken(
+                            email,
+                            null,
+                            List.of(new SimpleGrantedAuthority("ROLE_" + role))
+                    );
 
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

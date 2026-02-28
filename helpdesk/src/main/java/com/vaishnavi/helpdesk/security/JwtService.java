@@ -16,11 +16,20 @@ public class JwtService {
     private SecretKey getSignKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
+    public String extractRole(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSignKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
 
-    public String generateToken(String email) {
+        return claims.get("role", String.class);
+    }
+    public String generateToken(String email, String role) {
 
         return Jwts.builder()
                 .subject(email)
+                .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(getSignKey())
