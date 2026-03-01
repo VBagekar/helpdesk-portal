@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import CreateTicket from "./CreateTicket";
 
 function Dashboard() {
 
     const [tickets, setTickets] = useState([]);
 
-    const token = localStorage.getItem("token");
-
     // fetch my tickets
     const loadTickets = async () => {
         try {
+            const token = localStorage.getItem("token");
+
             const response = await axios.get(
                 "http://localhost:8080/api/tickets/my",
                 {
@@ -18,6 +19,7 @@ function Dashboard() {
                     }
                 }
             );
+
             setTickets(response.data);
         } catch (error) {
             alert("Failed to load tickets");
@@ -34,12 +36,17 @@ function Dashboard() {
     };
 
     return (
-        <div style={{textAlign:"center"}}>
+        <div style={{ textAlign: "center" }}>
             <h2>My Tickets</h2>
 
             <button onClick={logout}>Logout</button>
 
             <br/><br/>
+
+            {/* 🔥 THIS IS THE IMPORTANT PART */}
+            <CreateTicket onCreated={loadTickets} />
+
+            <br/>
 
             {tickets.length === 0 ? (
                 <p>No tickets yet</p>
